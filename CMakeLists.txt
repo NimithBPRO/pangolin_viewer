@@ -1,9 +1,11 @@
-cmake_minimum_required(VERSION 3.1)
+/cmake_minimum_required(VERSION 3.1)
 project(pangolin_viewer LANGUAGES CXX C)
 
 # ----- Find dependencies -----
 
 find_package(stella_vslam REQUIRED)
+find_package(OpenMP REQUIRED)
+find_package(g2o REQUIRED)
 
 # Pangolin
 find_package(Pangolin REQUIRED)
@@ -45,7 +47,16 @@ if(${Pangolin_VERSION} VERSION_GREATER 0.5)
         stella_vslam::stella_vslam
         opencv_highgui
         pango_display
-        pango_opengl)
+        pango_opengl
+        OpenMP::OpenMP_CXX
+        g2o::core
+        g2o::stuff
+        g2o::types_sba
+        g2o::types_sim3
+        g2o::solver_dense
+        g2o::solver_eigen
+        g2o::solver_csparse
+        g2o::csparse_extension)
 else()
     target_link_libraries(pangolin_viewer
         PUBLIC
@@ -98,3 +109,4 @@ install(TARGETS pangolin_viewer
 file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/pangolin_viewer/*.h")
 install(FILES ${HEADERS}
     DESTINATION ${PANGOLIN_VIEWER_INCLUDE_INSTALL_DIR})
+#//cd ~/lib/stella_vslam_examples/build && ./run_camera_slam -v ../orb_vocab.fbow -c ../config/jetson_cam.yaml -n 0 --viewer pangolin_viewer
